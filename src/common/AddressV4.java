@@ -1,13 +1,14 @@
 package common;
 
-public class IPv4 {
+public class AddressV4 {
     private int part1;
     private int part2;
     private int part3;
     private int part4;
+    private int port;
 
-    public IPv4(String ip) throws InvalidIPv4Exception {
-        String[] parsed = ip.split(" ");
+    public AddressV4(String ip, int port) throws InvalidIPv4Exception {
+        String[] parsed = ip.split(".");
         part1 = Integer.parseInt(parsed[0]);
         if (part1 < 0 || part1 > 255)
             throw new InvalidIPv4Exception();
@@ -23,6 +24,16 @@ public class IPv4 {
         part4 = Integer.parseInt(parsed[0]);
         if (part4 < 0 || part4 > 255)
             throw new InvalidIPv4Exception();
+
+        if (port < 0 || port > 65635)
+            throw new InvalidIPv4Exception();
+        else
+            this.port = port;
+    }
+
+    public AddressV4(String ipPort) throws InvalidIPv4Exception {
+        String[] parsed = ipPort.split(":");
+        new AddressV4(parsed[0], Integer.parseInt(parsed[1]));
     }
 
     @Override
@@ -30,7 +41,8 @@ public class IPv4 {
         return String.valueOf(part1) + '.' +
                 part2 + '.' +
                 part3 + '.' +
-                part4;
+                part4 + ':' +
+                port;
     }
 
     public class InvalidIPv4Exception extends Throwable {

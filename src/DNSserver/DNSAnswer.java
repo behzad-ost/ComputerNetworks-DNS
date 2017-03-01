@@ -1,10 +1,10 @@
 package DNSserver;
 
-import common.IPv4;
+import common.AddressV4;
 import org.json.JSONObject;
 
 public class DNSAnswer {
-    public DNSAnswer(IPv4 ip, DNSAnswer.Type answerType, int ttl) {
+    public DNSAnswer(AddressV4 ip, DNSAnswer.Type answerType, int ttl) {
         this.ip = ip;
         this.answerType = answerType;
         this.ttl = ttl;
@@ -12,8 +12,8 @@ public class DNSAnswer {
 
     public DNSAnswer(JSONObject jsonAnswer) throws InvalidDNSjsonAnswerException {
         try {
-            ip = new IPv4(jsonAnswer.get("IPv4").toString());
-        } catch (IPv4.InvalidIPv4Exception e) {
+            ip = new AddressV4(jsonAnswer.get("AddressV4").toString());
+        } catch (AddressV4.InvalidIPv4Exception e) {
             throw new InvalidDNSjsonAnswerException();
         }
 
@@ -35,14 +35,14 @@ public class DNSAnswer {
     public enum Type {
         A, NS
     }
-    private IPv4 ip;
+    private AddressV4 ip;
     private Type answerType;
     private int ttl;
 
     public Type getAnswerType() {
         return answerType;
     }
-    public IPv4 getIp() {
+    public AddressV4 getIp() {
         return ip;
     }
     public int getTtl() {
