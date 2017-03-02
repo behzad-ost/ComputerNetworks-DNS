@@ -8,20 +8,20 @@ public class AddressV4 {
     private int port;
 
     public AddressV4(String ip, int port) throws InvalidIPv4Exception {
-        String[] parsed = ip.split(".");
+        String[] parsed = ip.split("\\.");
         part1 = Integer.parseInt(parsed[0]);
         if (part1 < 0 || part1 > 255)
             throw new InvalidIPv4Exception();
 
-        part2 = Integer.parseInt(parsed[0]);
+        part2 = Integer.parseInt(parsed[1]);
         if (part2 < 0 || part2 > 255)
             throw new InvalidIPv4Exception();
 
-        part3 = Integer.parseInt(parsed[0]);
+        part3 = Integer.parseInt(parsed[2]);
         if (part3 < 0 || part3 > 255)
             throw new InvalidIPv4Exception();
 
-        part4 = Integer.parseInt(parsed[0]);
+        part4 = Integer.parseInt(parsed[3]);
         if (part4 < 0 || part4 > 255)
             throw new InvalidIPv4Exception();
 
