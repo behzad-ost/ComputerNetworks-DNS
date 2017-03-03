@@ -1,12 +1,6 @@
 package agent;
 
-
 public class Config {
-    String[]  rootIPs = {"127.0.0.1:8080"};
-
-    void showConfig(){
-        for(String ip: rootIPs){
-
-        }
-    }
+    static String[] rootsAddress = {"127.0.0.1:8080"};
+    static boolean isRecursive = true;
 }

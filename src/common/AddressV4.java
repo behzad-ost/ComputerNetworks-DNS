@@ -45,6 +45,14 @@ public class AddressV4 {
                 port;
     }
 
+    public String getIP() {
+        return part1 + "." + part2 + "." + part3 + "." + part4;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
     public class InvalidIPv4Exception extends Throwable {
 
     }

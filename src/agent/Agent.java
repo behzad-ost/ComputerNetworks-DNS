@@ -1,73 +1,46 @@
 package agent;
 
-
 import common.AddressV4;
-import common.ServerTransceiver;
-import common.Transceiver;
-import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Agent {
-    private Config config;
-    public Agent() throws AddressV4.InvalidIPv4Exception, IOException {
-        config = new Config();
+    static List<AddressV4> rootsAddress;
+    private static boolean isRecursive;
+    public static void main(String[] args) throws IOException, AddressV4.InvalidIPv4Exception {
+        setConfiguration();
+
+        ServerSocket serverSocket = new ServerSocket();
+        while (true) {
+            Socket clientSocket = serverSocket.accept();
+            if (isRecursive)
+                new Thread(new RecursiveClientHandler(clientSocket)).start();
+            else
+                new Thread(new IterativeClientHandler(clientSocket)).start();
+        }
     }
 
-    public static void main(String[] args) throws IOException, AddressV4.InvalidIPv4Exception {
-        Agent agent = new Agent();
-//        agent.showConfig();
-        ServerTransceiver agentServer = new ServerTransceiver(12345);
-        Transceiver rootTransceiver = new Transceiver("localhost", 8081);
-                                        //TODO:get root address from config
-        agentServer.accept();
-        while (true){
-            String request = agentServer.receive();
-            if (request == null || request == "" || request == "\n")
-                break;
-
-            String[] tokens = request.split("\\s+");
-            String command = tokens[0];
-            switch (command) {
-                case "lookup":
-                    try {
-//                        JSONObject obj = new JSONObject();
-//                        obj.put("domain", tokens[1]);
-//                        obj.put("requestType", tokens[2]);
-//                        rootTransceiver.send(obj.toString());
-
-                        System.out.println("lookup request.");
-                    } catch (Exception ex) {
-                        System.out.println("bad request");
-                    }
-                    break;
-                case "update":
-                    try {
-                        System.out.println("Handle update request");
-
-                    } catch (Exception ex) {
-
-                    }
-                    break;
-                case "add":
-                    try {
-                        System.out.println("Handle add request");
-
-                    } catch (Exception ex) {
-
-                    }
-                    break;
-                default:
-                    System.out.println(request);
+    private static void setConfiguration() {
+        setRootsAddress(new LinkedList<>());
+        for (String item: Config.rootsAddress) {
+            try {
+                getRootsAddress().add(new AddressV4(item));
+            } catch (AddressV4.InvalidIPv4Exception e) {
+                e.printStackTrace();
             }
         }
-
-//        rootTransceiver.send("Hi");
-
-        // TODO: get request on socket and .....
+        isRecursive = Config.isRecursive;
     }
 
-    private void showConfig() {
-        config.showConfig();
+    public static List<AddressV4> getRootsAddress() {
+        return rootsAddress;
+    }
+
+    public static void setRootsAddress(List<AddressV4> rootsAddress) {
+        Agent.rootsAddress = rootsAddress;
     }
 }

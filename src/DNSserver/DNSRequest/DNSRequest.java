@@ -27,4 +27,36 @@ abstract public class DNSRequest {
     public RequestType getRequestType() {
         return requestType;
     }
+
+    public static RequestHandleType getRequestHandleType(String dnsRequest) {
+        JSONObject requestInJSON = new JSONObject(dnsRequest);
+
+        String handleType = requestInJSON.get("requestHandleType").toString();
+        switch (handleType) {
+            case "Iterative":
+                return RequestHandleType.Iterative;
+            case "Recursive":
+                return RequestHandleType.Recursive;
+            default:
+                // TODO: throw Exception!
+                return null;
+        }
+    }
+
+    public static RequestType getRequestType(String dnsRequest) {
+        JSONObject requestInJSON = new JSONObject(dnsRequest);
+
+        String requestType = requestInJSON.get("requestType").toString();
+        switch (requestType) {
+            case "LookUp":
+                return RequestType.LookUp;
+            case "AddNewDomain":
+                return RequestType.AddNewDomain;
+            case "UpdateCurrentDomain":
+                return RequestType.UpdateCurrentDomain;
+            default:
+                // TODO: throw Exception!
+                return null;
+        }
+    }
 }

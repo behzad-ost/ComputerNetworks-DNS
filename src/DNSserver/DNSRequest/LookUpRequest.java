@@ -14,7 +14,7 @@ public class LookUpRequest extends DNSRequest {
         requestType = RequestType.LookUp;
         domain = new Domain(lookUpRequest.get("domain").toString());
 
-        String tmpRequestHandleType = lookUpRequest.get("requestType").toString();
+        String tmpRequestHandleType = lookUpRequest.get("requestHandleType").toString();
         switch (tmpRequestHandleType) {
             case "Iterative":
                 requestHandleType = RequestHandleType.Iterative;
@@ -25,6 +25,10 @@ public class LookUpRequest extends DNSRequest {
             default:
                 // TODO: throw an Exception! (first define it!)
         }
+    }
+
+    public String getDomain() {
+        return domain.toString();
     }
 
     @Override

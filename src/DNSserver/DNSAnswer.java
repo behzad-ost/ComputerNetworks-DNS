@@ -4,10 +4,15 @@ import common.AddressV4;
 import org.json.JSONObject;
 
 public class DNSAnswer {
-    public DNSAnswer(AddressV4 ip, DNSAnswer.Type answerType, int ttl) {
+    public DNSAnswer(AddressV4 ip, DNSRepository.DNSRecord.Type answerType, int ttl, StatusCode statusCode) {
         this.ip = ip;
         this.answerType = answerType;
         this.ttl = ttl;
+        this.statusCode = statusCode;
+    }
+
+    public enum StatusCode {
+        success, notInDatabase
     }
 
     public DNSAnswer(JSONObject jsonAnswer) throws InvalidDNSjsonAnswerException {
@@ -20,10 +25,10 @@ public class DNSAnswer {
         String tmpAnswerType = jsonAnswer.get("Type").toString();
         switch (tmpAnswerType) {
             case "A":
-                answerType = Type.A;
+                answerType = DNSRepository.DNSRecord.Type.A;
                 break;
             case "NS":
-                answerType = Type.NS;
+                answerType = DNSRepository.DNSRecord.Type.NS;
                 break;
             default:
                 throw new InvalidDNSjsonAnswerException();
@@ -32,14 +37,12 @@ public class DNSAnswer {
         ttl = Integer.parseInt(jsonAnswer.get("ttl").toString());
     }
 
-    public enum Type {
-        A, NS
-    }
     private AddressV4 ip;
-    private Type answerType;
+    private DNSRepository.DNSRecord.Type answerType;
     private int ttl;
+    private StatusCode statusCode;
 
-    public Type getAnswerType() {
+    public DNSRepository.DNSRecord.Type getAnswerType() {
         return answerType;
     }
     public AddressV4 getIp() {
