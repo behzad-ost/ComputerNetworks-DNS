@@ -1,28 +1,23 @@
 package DNSserver;
 
-import common.AddressV4;
 import org.json.JSONObject;
 
 public class DNSAnswer {
-    public DNSAnswer(AddressV4 ip, DNSRepository.DNSRecord.Type answerType, int ttl, StatusCode statusCode) {
-        this.ip = ip;
+    public DNSAnswer(String address, DNSRepository.DNSRecord.Type answerType, int ttl, StatusCode statusCode) {
+        this.address = address;
         this.answerType = answerType;
         this.ttl = ttl;
         this.statusCode = statusCode;
     }
 
     public enum StatusCode {
-        success, notInDatabase
+        SUCCESS, NOT_IN_DATABASE
     }
 
-    public DNSAnswer(JSONObject jsonAnswer) throws InvalidDNSjsonAnswerException {
-        try {
-            ip = new AddressV4(jsonAnswer.get("AddressV4").toString());
-        } catch (AddressV4.InvalidIPv4Exception e) {
-            throw new InvalidDNSjsonAnswerException();
-        }
+    public DNSAnswer(JSONObject jsonAnswer) throws InvalidDNSJsonAnswerException {
+        address = jsonAnswer.get("address").toString();
 
-        String tmpAnswerType = jsonAnswer.get("Type").toString();
+        String tmpAnswerType = jsonAnswer.get("answerType").toString();
         switch (tmpAnswerType) {
             case "A":
                 answerType = DNSRepository.DNSRecord.Type.A;
@@ -31,35 +26,57 @@ public class DNSAnswer {
                 answerType = DNSRepository.DNSRecord.Type.NS;
                 break;
             default:
-                throw new InvalidDNSjsonAnswerException();
+                throw new InvalidDNSJsonAnswerException();
         }
 
         ttl = Integer.parseInt(jsonAnswer.get("ttl").toString());
+
+        String tmpStatusCode = jsonAnswer.get("statusCode").toString();
+        switch (tmpStatusCode) {
+            case "SUCCESS":
+                statusCode = StatusCode.SUCCESS;
+                break;
+            case "NOT_IN_DATABASE":
+                statusCode = StatusCode.NOT_IN_DATABASE;
+                break;
+
+            default:
+
+        }
     }
 
-    private AddressV4 ip;
+    private String address;
     private DNSRepository.DNSRecord.Type answerType;
     private int ttl;
     private StatusCode statusCode;
 
+    public String getAddress() {
+        return address;
+    }
     public DNSRepository.DNSRecord.Type getAnswerType() {
         return answerType;
-    }
-    public AddressV4 getIp() {
-        return ip;
     }
     public int getTtl() {
         return ttl;
     }
+    public StatusCode getStatusCode() {
+        return statusCode;
+    }
 
-    JSONObject getJSONObjectFormat() {
+    public JSONObject getJSONObjectFormat() {
         JSONObject dnsAnswer = new JSONObject();
-        dnsAnswer.put("ip", ip.toString());
+        dnsAnswer.put("address", address);
         dnsAnswer.put("answerType", answerType);
         dnsAnswer.put("ttl", ttl);
+        dnsAnswer.put("statusCode", statusCode);
         return dnsAnswer;
     }
 
-    public class InvalidDNSjsonAnswerException extends Throwable {
+    @Override
+    public String toString() {
+        return getJSONObjectFormat().toString();
+    }
+
+    public class InvalidDNSJsonAnswerException extends Throwable {
     }
 }

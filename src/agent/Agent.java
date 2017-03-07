@@ -7,20 +7,27 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Agent {
     static List<AddressV4> rootsAddress;
     private static boolean isRecursive;
+    private static Logger logger = Logger.getLogger(Agent.class.getName());
     public static void main(String[] args) throws IOException, AddressV4.InvalidIPv4Exception {
         setConfiguration();
 
-        ServerSocket serverSocket = new ServerSocket();
+        ServerSocket serverSocket = new ServerSocket(12345);
         while (true) {
             Socket clientSocket = serverSocket.accept();
-            if (isRecursive)
+            logger.info("New client add on " + clientSocket);
+            if (isRecursive) {
+                logger.info("Starting RECURSIVE Handler Thread!");
                 new Thread(new RecursiveClientHandler(clientSocket)).start();
-            else
+            }
+            else {
+                logger.info("Starting ITERATIVE Handler Thread!");
                 new Thread(new IterativeClientHandler(clientSocket)).start();
+            }
         }
     }
 
@@ -28,6 +35,7 @@ public class Agent {
         setRootsAddress(new LinkedList<>());
         for (String item: Config.rootsAddress) {
             try {
+                logger.info("Adding " + new AddressV4(item).toString() + " to root server list (" + item + ")");
                 getRootsAddress().add(new AddressV4(item));
             } catch (AddressV4.InvalidIPv4Exception e) {
                 e.printStackTrace();
@@ -36,11 +44,11 @@ public class Agent {
         isRecursive = Config.isRecursive;
     }
 
-    public static List<AddressV4> getRootsAddress() {
+    private static List<AddressV4> getRootsAddress() {
         return rootsAddress;
     }
 
-    public static void setRootsAddress(List<AddressV4> rootsAddress) {
+    private static void setRootsAddress(List<AddressV4> rootsAddress) {
         Agent.rootsAddress = rootsAddress;
     }
 }

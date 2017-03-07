@@ -1,5 +1,6 @@
 package DNSserver;
 
+import exceptions.DomainNotFoundInDBException;
 import org.json.JSONObject;
 
 import java.util.LinkedList;
@@ -62,13 +63,13 @@ public class DNSRepository {
         }
     }
 
-    public DNSRepositoryAnswer searchRepo(String name) {
+    public DNSRepositoryAnswer searchRepo(String name) throws DomainNotFoundInDBException {
         for (DNSRecord record: records) {
             if (record.getName().equals(name)) {
                 return record.getAnswer();
             }
         }
-        return null;
+        throw new DomainNotFoundInDBException();
     }
 
     public void addDataInRepo(String name, List<String> values, DNSRecord.Type type) {

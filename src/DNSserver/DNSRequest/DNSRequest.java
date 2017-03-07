@@ -5,11 +5,11 @@ import org.json.JSONObject;
 
 abstract public class DNSRequest {
     public enum RequestHandleType {
-        Iterative, Recursive;
+        ITERATIVE, RECURSIVE
     }
 
     public enum RequestType {
-        LookUp, AddNewDomain, UpdateCurrentDomain
+        LOOKUP, ADD, UPDATE
     }
 
     Domain domain;
@@ -33,10 +33,10 @@ abstract public class DNSRequest {
 
         String handleType = requestInJSON.get("requestHandleType").toString();
         switch (handleType) {
-            case "Iterative":
-                return RequestHandleType.Iterative;
-            case "Recursive":
-                return RequestHandleType.Recursive;
+            case "ITERATIVE":
+                return RequestHandleType.ITERATIVE;
+            case "RECURSIVE":
+                return RequestHandleType.RECURSIVE;
             default:
                 // TODO: throw Exception!
                 return null;
@@ -48,12 +48,12 @@ abstract public class DNSRequest {
 
         String requestType = requestInJSON.get("requestType").toString();
         switch (requestType) {
-            case "LookUp":
-                return RequestType.LookUp;
-            case "AddNewDomain":
-                return RequestType.AddNewDomain;
-            case "UpdateCurrentDomain":
-                return RequestType.UpdateCurrentDomain;
+            case "LOOKUP":
+                return RequestType.LOOKUP;
+            case "ADD":
+                return RequestType.ADD;
+            case "UPDATE":
+                return RequestType.UPDATE;
             default:
                 // TODO: throw Exception!
                 return null;

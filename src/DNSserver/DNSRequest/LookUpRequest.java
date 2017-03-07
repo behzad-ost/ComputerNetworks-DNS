@@ -5,22 +5,22 @@ import org.json.JSONObject;
 
 public class LookUpRequest extends DNSRequest {
     public LookUpRequest(String domain, RequestHandleType requestHandleType) {
-        requestType = RequestType.LookUp;
+        requestType = RequestType.LOOKUP;
         this.domain = new Domain(domain);
         this.requestHandleType = requestHandleType;
     }
 
     public LookUpRequest(JSONObject lookUpRequest) {
-        requestType = RequestType.LookUp;
+        requestType = RequestType.LOOKUP;
         domain = new Domain(lookUpRequest.get("domain").toString());
 
         String tmpRequestHandleType = lookUpRequest.get("requestHandleType").toString();
         switch (tmpRequestHandleType) {
-            case "Iterative":
-                requestHandleType = RequestHandleType.Iterative;
+            case "ITERATIVE":
+                requestHandleType = RequestHandleType.ITERATIVE;
                 break;
-            case "Recursive":
-                requestHandleType = RequestHandleType.Recursive;
+            case "RECURSIVE":
+                requestHandleType = RequestHandleType.RECURSIVE;
                 break;
             default:
                 // TODO: throw an Exception! (first define it!)

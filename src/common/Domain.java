@@ -11,7 +11,8 @@ public class Domain {
 
     public static List<Domain> subDomains(String domain) {
         List<Domain> subDomains = new LinkedList<>();
-        String[] parsed = domain.split(".");
+
+        String[] parsed = domain.split("\\.");
         for (int i = 0; i < parsed.length; i++) {
             StringBuilder builder = new StringBuilder();
             for (int j = i; j < parsed.length; j++) {

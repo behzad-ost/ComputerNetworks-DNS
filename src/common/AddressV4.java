@@ -7,6 +7,15 @@ public class AddressV4 {
     private int part4;
     private int port;
 
+    public static AddressV4 getNullAddress() {
+        try {
+            return new AddressV4("0.0.0.0:0");
+        } catch (InvalidIPv4Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public AddressV4(String ip, int port) throws InvalidIPv4Exception {
         String[] parsed = ip.split("\\.");
         part1 = Integer.parseInt(parsed[0]);
@@ -33,7 +42,12 @@ public class AddressV4 {
 
     public AddressV4(String ipPort) throws InvalidIPv4Exception {
         String[] parsed = ipPort.split(":");
-        new AddressV4(parsed[0], Integer.parseInt(parsed[1]));
+        AddressV4 tmp = new AddressV4(parsed[0], Integer.parseInt(parsed[1]));
+        this.part1 = tmp.part1;
+        this.part2 = tmp.part2;
+        this.part3 = tmp.part3;
+        this.part4 = tmp.part4;
+        this.port = tmp.port;
     }
 
     @Override
