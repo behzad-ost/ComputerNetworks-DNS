@@ -32,7 +32,7 @@ public class Agent {
     }
 
     private static void setConfiguration() {
-        setRootsAddress(new LinkedList<>());
+        setRootsAddress(new LinkedList<AddressV4>());
         for (String item: Config.rootsAddress) {
             try {
                 logger.info("Adding " + new AddressV4(item).toString() + " to root server list (" + item + ")");

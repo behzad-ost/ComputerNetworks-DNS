@@ -4,11 +4,9 @@ import DNSserver.DNSAnswer;
 import DNSserver.DNSRepository;
 import DNSserver.DNSRequest.DNSRequest;
 import DNSserver.DNSRequest.LookUpRequest;
-import common.AddressV4;
 import common.Domain;
 import exceptions.DomainNotFoundInDBException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -21,11 +19,11 @@ public class IterativeDNSHandler implements Runnable {
     private String request;
 
     private PrintWriter localDNSWriter;
+    
     IterativeDNSHandler(DNSApp dnsInstance, Socket socket, String request) throws IOException {
         this.dnsInstance = dnsInstance;
         this.localDNSSocket = socket;
         this.request = request;
-
         this.localDNSWriter = new PrintWriter(localDNSSocket.getOutputStream());
     }
 

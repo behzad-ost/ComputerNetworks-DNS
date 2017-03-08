@@ -21,6 +21,7 @@ public class Domain {
                 else
                     builder.append(parsed[j]).append(".");
             }
+            System.out.println(builder.toString());
             subDomains.add(new Domain(builder.toString()));
         }
 
